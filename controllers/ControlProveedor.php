@@ -153,43 +153,6 @@
 				$u++;
 			}
 			
-			/*
-
-			$_SESSION['RutaArchivoPeru'] = "C:\\ftp\\Peru\\";
-			$nom_proveedorChile = $f3->get('GET.nom_proveedor');
-			//extracion de oc peruanas
-			$_SESSION['Archivos'] = "";
-			ControlProveedor::obtener_estructura_directorios($_SESSION['RutaArchivoPeru']);
-
-			if ( is_empty($_SESSION['Archivos']) ){
-				echo "Entro al if"
-			}
-			$dtarchivos = explode("$", (substr($_SESSION['Archivos'], 0, -1)));
-			var_dump($dtarchivos);
-            $dtprovoc = [];
-           
-			foreach ($dtarchivos as $val) {
-				$stringarchiv = explode("_", $val);
-						$_exist2 = false;
-                foreach ($dtprovoc as $var) {
-                    if ($var[0] == $stringarchiv[1] and $var[1] ==$stringarchiv[3]) {
-                        $_exist2 = true; break;
-							}
-						}
-                if ($_exist2==false){
-                	echo "Entro aca?";
-                	var_dump($stringarchiv);
-                		echo "Este es un valor".$stringarchiv[1]."Fin del valor";
-                    	$nom_Proveedorperu = \proveedor\proveedor::get_cod_nom_Prov_Peru($stringarchiv[1]);
-							if ($nom_Proveedorperu <> "" and $nom_Proveedorperu == $nom_proveedorChile) {
-                        array_push($dtprovoc,array($stringarchiv[1],$stringarchiv[3]));
-                        array_push($data, array("", $stringarchiv[3], 0, "", 0, 0, $val, "Peru"));
-							}
-
-				}
-			}
-			*/
-			
 			$f3->set('nombre_form', 'PO\'s and Packing Instructions');
 			$f3->set('lista_oc', $data);
 			$f3->set('contenido', 'proveedor/download_templates.html');
