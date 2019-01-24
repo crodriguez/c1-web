@@ -245,11 +245,13 @@
 		}
 		
 		public static function get_cod_nom_Prov_Peru($cod_provPeru) {
+			echo "Paso por aca??".$cod_provPeru;
 			$nombre = "";
 			$sql = "SELECT nom_proveedor
                     FROM PLC_PROVEEDORES_PERU  
                     where cod_proveedor =  $cod_provPeru";
 			
+			var_dump($sql);
 			$data = \database::getInstancia()->getFila($sql);
 			if (count($data) <> 0) {
 				$nombre = $data[0];
