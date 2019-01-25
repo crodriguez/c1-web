@@ -143,13 +143,18 @@
 		}
 		
 		public function download_templates($f3) {
-			
 			ControlProveedor::cargaMain($f3);
 			$data = \proveedor\proveedor::getOrdenesCompra($f3->get('GET.cod_proveedor'));
 			
 			$u = 0;
+			//var_dump($data);
 			foreach ($data as $t) {
-				array_push($data[$u], "", "Chile");
+				if ($data[$u][6] == 1 ){
+					array_push($data[$u], "", "Chile");
+				}
+				elseif  ($data[$u][6] == 2 ){
+					array_push($data[$u], "", "Peru");
+				}
 				$u++;
 			}
 			
@@ -306,59 +311,40 @@
 		
 		public function download_label_data($f3) {
 			
-			if ($f3->get('GET.pais') == "Chile") {
-				$po_number = $f3->get('GET.po_number');
-				$file = "labelData_$po_number.xlsx";
-				$objPHPExcel = new PHPExcel();
-				$objPHPExcel->getActiveSheet()->setTitle("Label Data");
-				// Columnas con datos de Ripley
-				$objPHPExcel->getActiveSheet()->SetCellValue("B2", "N° LPN");
-				$objPHPExcel->getActiveSheet()->SetCellValue("C2", "Packing Type");
-				$objPHPExcel->getActiveSheet()->SetCellValue("D2", "Vendor");
-				$objPHPExcel->getActiveSheet()->SetCellValue("E2", "PO#");
-				$objPHPExcel->getActiveSheet()->getStyle("B2:E2")->applyFromArray($this->estiloCabeceraR);
-				// Escribe los datos
-				$data = \proveedor\proveedor::getLabelData($po_number);
-				$r = 3;
-				foreach ($data as $val) {
-					for ($x = 2; $x <= 5; $x++) {
-						$c = \LibraryHelper::getColumnNameFromNumber($x);
-						$objPHPExcel->getActiveSheet()->SetCellValue($c . $r, $val[$x - 2]);
-					}
-					$objPHPExcel->getActiveSheet()->getStyle("B$r:E$r")->applyFromArray($this->estiloCelda);
-					$r++;
+			$codPais = ($f3->get('GET.pais')=="Chile"?1:2);
+			$po_number = $f3->get('GET.po_number');
+			$file = "labelData_$po_number.xlsx";
+			$objPHPExcel = new PHPExcel();
+			$objPHPExcel->getActiveSheet()->setTitle("Label Data");
+			// Columnas con datos de Ripley
+			$objPHPExcel->getActiveSheet()->SetCellValue("B2", "N° LPN");
+			$objPHPExcel->getActiveSheet()->SetCellValue("C2", "Packing Type");
+			$objPHPExcel->getActiveSheet()->SetCellValue("D2", "Vendor");
+			$objPHPExcel->getActiveSheet()->SetCellValue("E2", "PO#");
+			$objPHPExcel->getActiveSheet()->getStyle("B2:E2")->applyFromArray($this->estiloCabeceraR);
+			// Escribe los datos
+			$data = \proveedor\proveedor::getLabelData($po_number, $codPais);
+			$r = 3;
+			foreach ($data as $val) {
+				for ($x = 2; $x <= 5; $x++) {
+					$c = \LibraryHelper::getColumnNameFromNumber($x);
+					$objPHPExcel->getActiveSheet()->SetCellValue($c . $r, $val[$x - 2]);
 				}
-				for ($i = 2; $i <= 5; $i++) {
-					$column = \LibraryHelper::getColumnNameFromNumber($i);
-					$objPHPExcel->getActiveSheet()->getColumnDimension($column)->setAutoSize(true);
-				}
-				$objPHPExcel->getActiveSheet()->setSelectedCellByColumnAndRow(0, 1);
-				// Escribe el archivo Excel
-				header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-				header("Content-Disposition: attachment; filename=$file");
-				$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
-				$objWriter->save('php://output');
-				
-			} elseif ($f3->get('GET.pais') == "Peru") {
-				$file = str_replace("INST", "LPN", $f3->get('GET.Archivo')); // Decode URL-encoded string
-				$filepath = $_SESSION['RutaArchivoPeru'] . $file;
-				// Process download
-				if (file_exists($filepath)) {
-					header('Content-Description: File Transfer');
-					header('Content-Type: application/octet-stream');
-					header('Content-Disposition: attachment; filename="' . $file . '"');
-					header('Expires: 0');
-					header('Cache-Control: must-revalidate');
-					header('Pragma: public');
-					header('Content-Length: ' . filesize($filepath));
-					
-					flush(); // Flush system output buffer
-					readfile($filepath);
-					exit;
-				}
-				
-				
+				$objPHPExcel->getActiveSheet()->getStyle("B$r:E$r")->applyFromArray($this->estiloCelda);
+				$r++;
 			}
+			for ($i = 2; $i <= 5; $i++) {
+				$column = \LibraryHelper::getColumnNameFromNumber($i);
+				$objPHPExcel->getActiveSheet()->getColumnDimension($column)->setAutoSize(true);
+			}
+			$objPHPExcel->getActiveSheet()->setSelectedCellByColumnAndRow(0, 1);
+			// Escribe el archivo Excel
+			
+			header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+			header("Content-Disposition: attachment; filename=$file");
+			$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+			$objWriter->save('php://output');
+
 		}
 		
 		public function download_packing_list($f3) {

@@ -23,7 +23,7 @@
 		public static function getProveedores() {
 			//$sql = "BEGIN PLC_PKG_PROVEEDOR.PRC_INFO_PROVEEDOR(0, :data); END;";
 			//$data = \database::getInstancia()->getConsultaSP($sql, 1);
-			$sql = "SELECT COD_PROVEEDOR, RUT_PROVEEDOR, TRIM(NOM_PROVEEDOR) FROM PLC_PROVEEDORES_PMM ORDER BY TRIM(NOM_PROVEEDOR)";
+			$sql = "SELECT  COD_PROVEEDOR, RUT_PROVEEDOR, TRIM(NOM_PROVEEDOR) FROM PLC_PROVEEDORES_PMM WHERE COD_PROVEEDOR IN (SELECT MIN(COD_PROVEEDOR) FROM PLC_PROVEEDORES_PMM GROUP BY NOM_PROVEEDOR) ORDER BY TRIM(NOM_PROVEEDOR)";
 			$data = \database::getInstancia()->getFilas($sql);
 			return $data;
 		}
@@ -46,8 +46,8 @@
 			return $data;
 		}
 		
-		public static function getLabelData($po_number) {
-			$sql = "BEGIN PLC_PKG_PROVEEDOR.PRC_DETALLE_LPN($po_number, :data); END;";
+		public static function getLabelData($po_number, $codPais) {
+			$sql = "BEGIN PLC_PKG_PROVEEDOR.PRC_DETALLE_LPN($po_number, $codPais, :data); END;";
 			$data = \database::getInstancia()->getConsultaSP($sql, 1);
 			return $data;
 		}
