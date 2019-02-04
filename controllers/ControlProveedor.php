@@ -147,7 +147,6 @@
 			$data = \proveedor\proveedor::getOrdenesCompra($f3->get('GET.cod_proveedor'));
 			
 			$u = 0;
-			//var_dump($data);
 			foreach ($data as $t) {
 				if ($data[$u][6] == 1 ){
 					array_push($data[$u], "", "Chile");
@@ -201,112 +200,99 @@
 		
 		public function download_packing_instructions($f3) {
 			
-			if ($f3->get('GET.pais') == "Chile") {
-				$po_number = $f3->get('GET.po_number');
-				$file = "packingInstructions_$po_number.xlsx";
-				$objPHPExcel = new PHPExcel();
-				$objPHPExcel->setActiveSheetIndex(0);
-				$objPHPExcel->getActiveSheet()->setTitle("Packing Instructions");
-				$objPHPExcel->getActiveSheet()->SetCellValue("A1", "PI Number");
-				$objPHPExcel->getActiveSheet()->SetCellValue("A2", "PO Number");
-				$objPHPExcel->getActiveSheet()->SetCellValue("A3", "Dpto Code");
-				$objPHPExcel->getActiveSheet()->SetCellValue("A4", "Dpto Description");
-				$objPHPExcel->getActiveSheet()->getStyle("A1:B4")->applyFromArray($this->estiloCelda);
-				$objPHPExcel->getActiveSheet()->mergeCells("A6:H6");
-				$objPHPExcel->getActiveSheet()->SetCellValue("A6", "PRODUCT DESCRIPTION");
-				$objPHPExcel->getActiveSheet()->mergeCells("I6:L6");
-				$objPHPExcel->getActiveSheet()->SetCellValue("I6", "Total Units");
-				$objPHPExcel->getActiveSheet()->mergeCells("M6:AC6");
-				$objPHPExcel->getActiveSheet()->SetCellValue("M6", "TOTAL PORCENTUAL PURCHASE");
-				$objPHPExcel->getActiveSheet()->mergeCells("AD6:AT6");
-				$objPHPExcel->getActiveSheet()->SetCellValue("AD6", "TOTAL UNITS PURCHASE");
-				$objPHPExcel->getActiveSheet()->mergeCells("AU6:AZ6");
-				$objPHPExcel->getActiveSheet()->SetCellValue("AU6", "Assorted Size Solid Color Instructions");
-				$objPHPExcel->getActiveSheet()->mergeCells("BA6:CI6");
-				$objPHPExcel->getActiveSheet()->SetCellValue("BA6", "Solid Size Solid Color Instructions");
-				$objPHPExcel->getActiveSheet()->SetCellValue("A7", "Evento");
-				$objPHPExcel->getActiveSheet()->SetCellValue("B7", "Brand");
-				$objPHPExcel->getActiveSheet()->SetCellValue("C7", "Line Description");
-				$objPHPExcel->getActiveSheet()->SetCellValue("D7", " Subline Description");
-				$objPHPExcel->getActiveSheet()->SetCellValue("E7", "Subline Code");
-				$objPHPExcel->getActiveSheet()->SetCellValue("F7", "Style Name");
-				$objPHPExcel->getActiveSheet()->SetCellValue("G7", "Sizes");
-				$objPHPExcel->getActiveSheet()->SetCellValue("H7", "Style Code (Ripley)");
-				$objPHPExcel->getActiveSheet()->SetCellValue("I7", "Color");
-				$objPHPExcel->getActiveSheet()->SetCellValue("J7", "Total Units");
-				$objPHPExcel->getActiveSheet()->SetCellValue("K7", "Total Assorted size Solid Color Units");
-				$objPHPExcel->getActiveSheet()->SetCellValue("L7", "Total Solid Size Solid Color");
-				for ($x = 1; $x <= 17; $x++) {
-					$c = \LibraryHelper::getColumnNameFromNumber($x + 12);
-					$objPHPExcel->getActiveSheet()->SetCellValue($c . "7", "% Size $x");
-				}
-				for ($x = 1; $x <= 17; $x++) {
-					$c = \LibraryHelper::getColumnNameFromNumber($x + 29);
-					$objPHPExcel->getActiveSheet()->SetCellValue($c . "7", "Qty Size $x");
-				}
-				$objPHPExcel->getActiveSheet()->SetCellValue("AU7", "Size Breakdown");
-				$objPHPExcel->getActiveSheet()->SetCellValue("AV7", "Inner Pack Qty");
-				$objPHPExcel->getActiveSheet()->SetCellValue("AW7", "Total # Curves");
-				$objPHPExcel->getActiveSheet()->SetCellValue("AX7", "Curves Per CTN");
-				$objPHPExcel->getActiveSheet()->SetCellValue("AY7", "Units per CTN");
-				$objPHPExcel->getActiveSheet()->SetCellValue("AZ7", "Number of Cartons");
-				$objPHPExcel->getActiveSheet()->SetCellValue("BA7", "Master Pack");
-				for ($x = 1; $x <= 17; $x++) {
-					$c = \LibraryHelper::getColumnNameFromNumber($x + 53);
-					$objPHPExcel->getActiveSheet()->SetCellValue($c . "7", "# Units Size $x");
-				}
-				for ($x = 1; $x <= 17; $x++) {
-					$c = \LibraryHelper::getColumnNameFromNumber($x + 70);
-					$objPHPExcel->getActiveSheet()->SetCellValue($c . "7", "# Cartons Size $x");
-				}
-				$objPHPExcel->getActiveSheet()->getStyle("A6:CI7")->applyFromArray($this->estiloCabecera);
-				$data = \proveedor\proveedor::getPackingInstructions($po_number);
-				$flag = false;
-				$r = 8;
-				foreach ($data as $row) {
-					if (!$flag) {
-						$flag = true;
-						for ($i = 1; $i <= 4; $i++) {
-							$objPHPExcel->getActiveSheet()->SetCellValue("B$i", $row[$i - 1]);
-						}
-					}
-					for ($x = 1; $x <= 87; $x++) {
-						$c = \LibraryHelper::getColumnNameFromNumber($x);
-						$objPHPExcel->getActiveSheet()->SetCellValue($c . $r, $row[$x + 3]);
-					}
-					$objPHPExcel->getActiveSheet()->getStyle("M$r:AC$r")->getNumberFormat()->setFormatCode('0.00');
-					$objPHPExcel->getActiveSheet()->getStyle("A$r:CI$r")->applyFromArray($this->estiloCelda);
-					$r++;
-				}
-				for ($i = 1; $i <= 87; $i++) {
-					$column = \LibraryHelper::getColumnNameFromNumber($i);
-					$objPHPExcel->getActiveSheet()->getColumnDimension($column)->setAutoSize(true);
-				}
-				$objPHPExcel->getActiveSheet()->setSelectedCellByColumnAndRow(0, 1);
-				header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-				header("Content-Disposition: attachment; filename=$file");
-				$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
-				$objWriter->save('php://output');
-				
-			} elseif ($f3->get('GET.pais') == "Peru") {
-				$file = $f3->get('GET.Archivo'); // Decode URL-encoded string
-				$filepath = $_SESSION['RutaArchivoPeru'] . $file;
-				
-				// Process download
-				if (file_exists($filepath)) {
-					header('Content-Description: File Transfer');
-					header('Content-Type: application/octet-stream');
-					header('Content-Disposition: attachment; filename="' . $file . '"');
-					header('Expires: 0');
-					header('Cache-Control: must-revalidate');
-					header('Pragma: public');
-					header('Content-Length: ' . filesize($filepath));
-					
-					flush(); // Flush system output buffer
-					readfile($filepath);
-					exit;
-				}
+			$po_number = $f3->get('GET.po_number');
+			$file = "packingInstructions_$po_number.xlsx";
+			$objPHPExcel = new PHPExcel();
+			$objPHPExcel->setActiveSheetIndex(0);
+			$objPHPExcel->getActiveSheet()->setTitle("Packing Instructions");
+			$objPHPExcel->getActiveSheet()->SetCellValue("A1", "PI Number");
+			$objPHPExcel->getActiveSheet()->SetCellValue("A2", "PO Number");
+			$objPHPExcel->getActiveSheet()->SetCellValue("A3", "Dpto Code");
+			$objPHPExcel->getActiveSheet()->SetCellValue("A4", "Dpto Description");
+			$objPHPExcel->getActiveSheet()->getStyle("A1:B4")->applyFromArray($this->estiloCelda);
+			$objPHPExcel->getActiveSheet()->mergeCells("A6:H6");
+			$objPHPExcel->getActiveSheet()->SetCellValue("A6", "PRODUCT DESCRIPTION");
+			$objPHPExcel->getActiveSheet()->mergeCells("I6:L6");
+			$objPHPExcel->getActiveSheet()->SetCellValue("I6", "Total Units");
+			$objPHPExcel->getActiveSheet()->mergeCells("M6:AG6");
+			$objPHPExcel->getActiveSheet()->SetCellValue("M6", "TOTAL PORCENTUAL PURCHASE");
+			$objPHPExcel->getActiveSheet()->mergeCells("AH6:BB6");
+			$objPHPExcel->getActiveSheet()->SetCellValue("AH6", "TOTAL UNITS PURCHASE");
+			$objPHPExcel->getActiveSheet()->mergeCells("BC6:BH6");
+			$objPHPExcel->getActiveSheet()->SetCellValue("BC6", "Assorted Size Solid Color Instructions");
+			$objPHPExcel->getActiveSheet()->mergeCells("BI6:CU6");
+			$objPHPExcel->getActiveSheet()->SetCellValue("BI6", "Solid Size Solid Color Instructions");
+
+			$objPHPExcel->getActiveSheet()->SetCellValue("A7", "Evento");
+			$objPHPExcel->getActiveSheet()->SetCellValue("B7", "Brand");
+			$objPHPExcel->getActiveSheet()->SetCellValue("C7", "Line Description");
+			$objPHPExcel->getActiveSheet()->SetCellValue("D7", " Subline Description");
+			$objPHPExcel->getActiveSheet()->SetCellValue("E7", "Subline Code");
+			$objPHPExcel->getActiveSheet()->SetCellValue("F7", "Style Name");
+			$objPHPExcel->getActiveSheet()->SetCellValue("G7", "Sizes");
+			$objPHPExcel->getActiveSheet()->SetCellValue("H7", "Style Code (Ripley)");
+			$objPHPExcel->getActiveSheet()->SetCellValue("I7", "Color");
+			$objPHPExcel->getActiveSheet()->SetCellValue("J7", "Total Units");
+			$objPHPExcel->getActiveSheet()->SetCellValue("K7", "Total Assorted size Solid Color Units");
+			$objPHPExcel->getActiveSheet()->SetCellValue("L7", "Total Solid Size Solid Color");
+			for ($x = 1; $x <= 21; $x++) {
+				$c = \LibraryHelper::getColumnNameFromNumber($x + 12);
+				$objPHPExcel->getActiveSheet()->SetCellValue($c . "7", "% Size $x");
 			}
+			for ($x = 1; $x <= 21; $x++) {
+				$c = \LibraryHelper::getColumnNameFromNumber($x + 33);
+				$objPHPExcel->getActiveSheet()->SetCellValue($c . "7", "Qty Size $x");
+			}
+			$objPHPExcel->getActiveSheet()->SetCellValue("BC7", "Size Breakdown");
+			$objPHPExcel->getActiveSheet()->SetCellValue("BD7", "Inner Pack Qty");
+			$objPHPExcel->getActiveSheet()->SetCellValue("BE7", "Total # Curves");
+			$objPHPExcel->getActiveSheet()->SetCellValue("BF7", "Curves Per CTN");
+			$objPHPExcel->getActiveSheet()->SetCellValue("BG7", "Units per CTN");
+			$objPHPExcel->getActiveSheet()->SetCellValue("BH7", "Number of Cartons");
+			$objPHPExcel->getActiveSheet()->SetCellValue("BI7", "Master Pack");
+			for ($x = 1; $x <= 21; $x++) {
+				$c = \LibraryHelper::getColumnNameFromNumber($x + 61);
+				$objPHPExcel->getActiveSheet()->SetCellValue($c . "7", "# Units Size $x");
+			}
+			for ($x = 1; $x <= 21; $x++) {
+				$c = \LibraryHelper::getColumnNameFromNumber($x + 82);
+				$objPHPExcel->getActiveSheet()->SetCellValue($c . "7", "# Cartons Size $x");
+			}
+			$objPHPExcel->getActiveSheet()->getStyle("A6:CY7")->applyFromArray($this->estiloCabecera);
+			$codModPais = 1;
+			if ( $f3->get('GET.pais') == "Chile" )
+				$codModPais = 1;
+			elseif ( $f3->get('GET.pais') == "Peru" )
+				$codModPais = 2;
+
+			$data = \proveedor\proveedor::getPackingInstructions($po_number, $codModPais);
+			$flag = false;
+			$r = 8;
+			foreach ($data as $row) {
+				if (!$flag) {
+					$flag = true;
+					for ($i = 1; $i <= 4; $i++) {
+						$objPHPExcel->getActiveSheet()->SetCellValue("B$i", $row[$i - 1]);
+					}
+				}
+				for ($x = 1; $x <= 103; $x++) {
+					$c = \LibraryHelper::getColumnNameFromNumber($x);
+					$objPHPExcel->getActiveSheet()->SetCellValue($c . $r, $row[$x + 3]);
+				}
+				$objPHPExcel->getActiveSheet()->getStyle("M$r:AG$r")->getNumberFormat()->setFormatCode('0.00');
+				$objPHPExcel->getActiveSheet()->getStyle("A$r:CY$r")->applyFromArray($this->estiloCelda);
+				$r++;
+			}
+			for ($i = 1; $i <= 103; $i++) {
+				$column = \LibraryHelper::getColumnNameFromNumber($i);
+				$objPHPExcel->getActiveSheet()->getColumnDimension($column)->setAutoSize(true);
+			}
+			
+			$objPHPExcel->getActiveSheet()->setSelectedCellByColumnAndRow(0, 1);
+			header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+			header("Content-Disposition: attachment; filename=$file");
+			$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+			$objWriter->save('php://output');
 		}
 		
 		public function download_label_data($f3) {
@@ -348,7 +334,6 @@
 		}
 		
 		public function download_packing_list($f3) {
-			if ($f3->get('GET.pais') == "Chile") {
 				$po_number = $f3->get('GET.po_number');
 				$file = "packingList_$po_number.xlsx";
 				$objPHPExcel = new PHPExcel();
@@ -426,7 +411,12 @@
 				}
 				
 				// Muestra los datos
-				$data = \proveedor\proveedor::getPackingList($po_number);
+				$codModPais = 1;
+				if ( $f3->get('GET.pais') == "Chile" )
+					$codModPais = 1;
+				elseif( $f3->get('GET.pais') == "Peru" )
+					$codModPais = 2;
+				$data = \proveedor\proveedor::getPackingList($po_number, $codModPais);
 				$r = 9;
 				foreach ($data as $row) {
 					for ($i = 1; $i <= 85; $i++) {
@@ -445,26 +435,6 @@
 				header("Content-Disposition: attachment; filename=$file");
 				$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
 				$objWriter->save('php://output');
-			} elseif ($f3->get('GET.pais') == "Peru") {
-				$file = str_replace("INST", "PL", $f3->get('GET.Archivo')); // Decode URL-encoded string
-				$filepath = $_SESSION['RutaArchivoPeru'] . $file;
-				// Process download
-				if (file_exists($filepath)) {
-					header('Content-Description: File Transfer');
-					header('Content-Type: application/octet-stream');
-					header('Content-Disposition: attachment; filename="' . $file . '"');
-					header('Expires: 0');
-					header('Cache-Control: must-revalidate');
-					header('Pragma: public');
-					header('Content-Length: ' . filesize($filepath));
-					
-					flush(); // Flush system output buffer
-					readfile($filepath);
-					exit;
-				}
-				
-				
-			}
 		}
 		
 		public function invoice_income($f3) {

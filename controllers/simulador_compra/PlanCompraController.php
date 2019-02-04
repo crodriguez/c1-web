@@ -411,7 +411,7 @@ if($ESTADO_C1!=24){
 
         $array_data = $_GET;
 
-        echo \simulador_compra\PlanCompraClass::ModificaEstadoDinamico($f3->get('SESSION.COD_TEMPORADA'), $f3->get('SESSION.COD_DEPTO'), $f3->get('SESSION.login'), $array_data["ID_COLOR3"], $array_data["ESTADO_INSERT"], $array_data["PROFORMA"], $array_data["ESTADO_UPDATE"]);
+        echo \simulador_compra\PlanCompraClass::ModificaEstadoDinamico($f3->get('SESSION.COD_TEMPORADA'), $f3->get('SESSION.COD_DEPTO'), $f3->get('SESSION.login'), $array_data["ID_COLOR3"], $array_data["ESTADO_INSERT"], $array_data["PROFORMA"], $array_data["ESTADO_UPDATE"], $array_data["COD_MOD_PAIS"]);
 
     }
     public function ModificaEstadoDinamicoCorreccion($f3) {

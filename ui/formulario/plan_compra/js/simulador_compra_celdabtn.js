@@ -397,7 +397,8 @@ $(function () {
                                 ID_COLOR3: kendo.parseInt(ID_COLOR3),
                                 ESTADO_INSERT: kendo.parseInt(0),
                                 PROFORMA: String(PROFORMA),
-                                ESTADO_UPDATE: kendo.parseInt(3)
+                                ESTADO_UPDATE: kendo.parseInt(3),
+                                COD_MOD_PAIS: 1
                             },
                             // contentType: "application/json",
                             dataType: "json"

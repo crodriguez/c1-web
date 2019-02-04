@@ -40,8 +40,8 @@
 			return $data;
 		}
 		
-		public static function getPackingInstructions($po_number) {
-			$sql = "BEGIN PLC_PKG_PROVEEDOR.PRC_INSTRUCCIONES_EMPAQUE($po_number, :data); END;";
+		public static function getPackingInstructions($po_number, $cod_mod_pais) {
+			$sql = "BEGIN PLC_PKG_PROVEEDOR.PRC_INSTRUCCIONES_EMPAQUE($po_number, $cod_mod_pais, :data); END;";
 			$data = \database::getInstancia()->getConsultaSP($sql, 1);
 			return $data;
 		}
@@ -52,8 +52,8 @@
 			return $data;
 		}
 		
-		public static function getPackingList($po_number) {
-			$sql = "BEGIN PLC_PKG_PROVEEDOR.PRC_GENERAR_PACKING_LIST($po_number, :data); END;";
+		public static function getPackingList($po_number, $cod_mod_pais) {
+			$sql = "BEGIN PLC_PKG_PROVEEDOR.PRC_GENERAR_PACKING_LIST($po_number, $cod_mod_pais, :data); END;";
 			$data = \database::getInstancia()->getConsultaSP($sql, 1);
 			return $data;
 		}

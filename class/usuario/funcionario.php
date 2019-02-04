@@ -50,7 +50,6 @@ class funcionario {
      * @return array
      */
     public static function getListaFuncionarios() {
-
         $sql = "SELECT USR.cod_usr,USR.nom_usr, USR.CONTRASENIA CONTRASENIA,USR.cod_tipusr,NVL(TIPO.TIPO_USR,'Sin Perfil') AS TIPO_USR"
                 . " ,USR.fec_cre,(CASE WHEN USR.estado = 1 THEN 'ACTIVO' ELSE 'INACTIVO' END) as estado,"
                 . " (CASE WHEN USR.cod_pais = 2 THEN 'CHILE' ELSE 'OTRO' END) as pais,"

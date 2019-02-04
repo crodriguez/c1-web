@@ -3634,7 +3634,7 @@ class PlanCompraClass extends \parametros
 
     // ######################## INICIO Trabajo con flujo de aprobación ########################
     // Trabajo con Flujo Dinámico de Aprobación
-    public static function ModificaEstadoDinamico($temporada, $depto, $login, $id_color3, $estado_insert, $proforma, $estado_update)
+    public static function ModificaEstadoDinamico($temporada, $depto, $login, $id_color3, $estado_insert, $proforma, $estado_update, $cod_mod_pais)
     {
         $sql_insert = "INSERT INTO PLC_PLAN_COMPRA_HISTORICA (DPTO,LINEA,SUBLINEA,MARCA,ESTILO,VENTANA,COLOR,USER_LOGIN,USER_NOM,FECHA,HORA,PI,OC,ESTADO,TEMP,ID_COLOR3,NOM_LINEA,NOM_MARCA,NOM_VENTANA,NOM_COLOR,NOM_SUBLINEA)
                 SELECT
@@ -3682,7 +3682,7 @@ class PlanCompraClass extends \parametros
         // Si se ejecuta la consulta
         if ($data_insert) {
 
-            $sql_update = "begin PLC_PKG_UTILS.PRC_SOLOC($temporada,'" . $depto . "','" . $proforma . "',$estado_update, $id_color3, :error, :data); end;";
+            $sql_update = "begin PLC_PKG_UTILS.PRC_SOLOC($temporada,'" . $depto . "','" . $proforma . "',$estado_update, $id_color3, $cod_mod_pais, :error, :data); end;";
 
 
             // Almacenar TXT (Agregado antes del $data para hacer traza en el caso de haber error, considerar que si la ruta del archivo no existe el código no va pasar al $data)
@@ -3697,7 +3697,7 @@ class PlanCompraClass extends \parametros
             fclose($fp);
 
             $data_update = \database::getInstancia()->getConsultaSP($sql_update, 2);
-
+            var_dump($data_update);
             if ($data_update) {
 
                 if($estado_update==3){
