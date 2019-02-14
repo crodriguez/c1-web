@@ -796,6 +796,9 @@ class cbx_grilla_compra extends \parametros
         return $data;
     }
 
+
+    
+
     public static function llenar_tabla_oc($temporada, $codModPais)
     {
 
