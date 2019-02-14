@@ -164,6 +164,7 @@
 		}
 		
 		function obtener_estructura_directorios($ruta) {
+			echo $ruta;
 			// Se comprueba que realmente sea la ruta de un directorio
 			if (is_dir($ruta)) {
 				// Abre un gestor de directorios para la ruta indicada

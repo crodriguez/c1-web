@@ -407,7 +407,7 @@ $(function () {
 
                     } else {
 
-                        // Descripción - Color
+                        // Descripción - Colorm
                         // Agregar al arreglo de errores
                         arregloErrores.push({
                             "DESCRIPCION": String(DESCRIPCION),

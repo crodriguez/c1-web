@@ -788,18 +788,18 @@ class cbx_grilla_compra extends \parametros
 
     }
 
-    public static function llenar_tabla_depto($temporada)
+    public static function llenar_tabla_depto($temporada, $codModPais)
     {
 
-        $sql = "begin PLC_PKG_DESARROLLO.PRC_LISTDEPTXTEMP(" . $temporada . ", :data); end;";
+        $sql = "begin PLC_PKG_DESARROLLO.PRC_LISTDEPTXTEMP(" . $temporada . ",". $codModPais .", :data); end;";
         $data = \database::getInstancia()->getConsultaSP($sql, 1);
         return $data;
     }
 
-    public static function llenar_tabla_oc($temporada)
+    public static function llenar_tabla_oc($temporada, $codModPais)
     {
 
-        $sql = "begin PLC_PKG_DESARROLLO.PRC_LISTAR_ESTADOS(" . $temporada . ", :data); end;";
+        $sql = "begin PLC_PKG_DESARROLLO.PRC_LISTAR_ESTADOS(" . $temporada . ",". $codModPais .", :data); end;";
         $data = \database::getInstancia()->getConsultaSP($sql, 1);
         array_pop($data);
         return $data;
@@ -2083,10 +2083,10 @@ class cbx_grilla_compra extends \parametros
     }
 
     // Validar que tabla B Cruza con el color 3
-    public static function btn_actualizar_match($temporada, $depto, $login, $id_color, $linea, $sublinea, $estilo, $color, $color_nombre)
+    public static function btn_actualizar_match($temporada, $depto, $login, $id_color, $linea, $sublinea, $estilo, $color, $color_nombre, $codModPais)
     {
 
-        $sql = "begin PLC_PKG_DESARROLLO.PRC_UPDATE_COLOR3_OC($temporada,'" . $depto . "',$id_color, '" . $linea . "', '" . $sublinea . "', '" . $estilo . "', '" . $color . "','" . $color_nombre . "',:error, :data); end;";
+        $sql = "begin PLC_PKG_DESARROLLO.PRC_UPDATE_COLOR3_OC($temporada,'" . $depto . "',$id_color, '" . $linea . "', '" . $sublinea . "', '" . $estilo . "', '" . $color . "','" . $color_nombre . "',". $codModPais .",:error, :data); end;";
         // Almacenar TXT (Agregado antes del $data para hacer traza en el caso de haber error, considerar que si la ruta del archivo no existe el código no va pasar al $data)
         if (!file_exists('../archivos/log_querys/' . $login)) {
             mkdir('../archivos/log_querys/' . $login, 0775, true);

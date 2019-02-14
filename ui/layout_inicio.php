@@ -37,7 +37,7 @@
                     <!-- mini logo for sidebar mini 50x50 pixels -->
                     <span class="logo-mini"><b>C</b>1</span>
                     <!-- logo for regular state and mobile devices -->
-                    <span class="logo-lg"><b>C1</b> Plan de Compra</span>
+                    <span class="logo-lg"><b>C1</b> Plan de Compra HOLA</span>
                 </a>
 
                 <!-- Header Navbar: style can be found in header.less -->

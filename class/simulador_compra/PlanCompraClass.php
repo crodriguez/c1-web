@@ -145,7 +145,19 @@ class PlanCompraClass extends \parametros
         foreach ($data as $va1) {
 
             #region Vista oc + Cambio de estado Automatica
-            $proforma = utf8_encode($va1["PROFORMA"]);$orden_compra = ""; $estadoOc = "";$f_embarque = "";$f_eta = "";$f_recepcion = "";$dias_atrasado = ""; $_exist = false; $ESTADO= $va1["ESTADO_C1"];$nom_estado= $va1["CODESTADO"];$estilo_pmm = utf8_encode($va1["ESTILO_PMM"]);$estado_match = utf8_encode($va1["ESTADO_MATCH"]);
+            //var_dump($va1);
+            $proforma = utf8_encode($va1["PROFORMA"]);
+            $orden_compra = ""; 
+            $estadoOc = "";
+            $f_embarque = "";
+            $f_eta = "";
+            $f_recepcion = "";
+            $dias_atrasado = ""; 
+            $_exist = false; 
+            $ESTADO= $va1["ESTADO_C1"];
+            $nom_estado= $va1["CODESTADO"];
+            $estilo_pmm = utf8_encode($va1["ESTILO_PMM"]);
+            $estado_match = utf8_encode($va1["ESTADO_MATCH"]);
             if ($proforma <> 'null' and $proforma <> null and $proforma <> '0' and $proforma <> '' and
                 ($va1["ESTADO_C1"] == 18 or $va1["ESTADO_C1"] == 19 or $va1["ESTADO_C1"] == 22)) {
 
@@ -2493,7 +2505,6 @@ class PlanCompraClass extends \parametros
                 AND COD_TEMPORADA =  $temporada
                 AND DEP_DEPTO = '" . $depto . "' 
                 ";
-
         // Almacenar TXT (Agregado antes del $data para hacer traza en el caso de haber error, considerar que si la ruta del archivo no existe el código no va pasar al $data)
         if (!file_exists('../archivos/log_querys/' . $login)) {
             mkdir('../archivos/log_querys/' . $login, 0775, true);
@@ -2506,7 +2517,7 @@ class PlanCompraClass extends \parametros
         fclose($fp);
 
         $data = \database::getInstancia()->getConsulta($sql);
-
+        var_dump($data);
         if ($data) {
             return 0;
         } else {
